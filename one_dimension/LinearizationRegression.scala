@@ -1,3 +1,5 @@
+package one_dimension
+
 
 /*
 @ author: Steve Tueno
@@ -6,31 +8,27 @@
 
 
 /** Main class */
-object LinearizationClassification {
+object LinearizationRegression {
 
 
   /** Main function */
   def main(args: Array[String]): Unit = {
-    processLinearizationClassification(10000, 0.6)
+    processLinearizationRegression(10000, 0.6)
   }
 
 
-  def processLinearizationClassification(N: Int, percentage: Double) = {
+  def processLinearizationRegression(N: Int, percentage: Double): Unit = {
 
 
     val data = scala.util.Random.shuffle(0 to N - 1).splitAt(Math.round(N * percentage).toInt)
 
     val X = data._1.toArray
-    val Y = X.map(x => Util.fc(x.toDouble))
+    val Y = X.map(x => Util.fr(x.toDouble))
     val Yprime = X.map(x => Util.prime(x.toDouble))
 
     val XTest = data._2.toArray
-    val YTest = XTest.map(x => Util.fc(x.toDouble))
+    val YTest = XTest.map(x => Util.fr(x.toDouble))
     val YprimeTest = XTest.map(x => Util.prime(x.toDouble))
-
-
-    //val x = scala.util.Random.nextInt(2 * N + 1)
-    //println("x = "+x+", yre = "+f(x)+" et ypre = "+predict(x, Y, Yprime, a, b, k))
 
 
     //overview of predictions
@@ -40,12 +38,12 @@ object LinearizationClassification {
     //X.indices.foreach(i=>println(Y(i)+" 1:"+X(i)))
     //XTest.indices.foreach(i=>println(YTest(i)+" 1:"+XTest(i)))
 
+    //X.indices.foreach(i=>println(X(i)+" "+Y(i)))
+    //XTest.indices.foreach(i=>println(XTest(i)+" "+YTest(i)))
 
-    //println("erreur de régression = "+XTest.indices.aggregate(0.0)((s, i)=>s+Math.pow(predict(XTest(i), YTest, YprimeTest, a, b, k)-YTest(i), 2), _+_))
 
-    val predicts = XTest.indices.aggregate(0.0)((s, i) => if (predict(XTest(i), Y, Yprime) == YTest(i)) s + 1 else s, _ + _)
+    println("Regression error = " + XTest.indices.par.aggregate(0.0)((s, i) => s + Math.abs(predict(XTest(i), Y, Yprime) - YTest(i)), _ + _) / XTest.length)
 
-    println("Classification error = " + (XTest.length - predicts) / XTest.length + " well classified count = " + predicts + "/" + XTest.length)
 
   }
 
@@ -57,8 +55,7 @@ object LinearizationClassification {
     //k-nearest neighbors
     val topYPrimeIndices = Util.top(Yprime.map(Util.Coord), Util.k)(new Util.CoordOrdering(Util.Coord(yprime))).map(y => Yprime.indexOf(y.x))
 
-    if (topYPrimeIndices.aggregate(0.0)((s, j) => s + ((yprime * Y(j)) / Yprime(j)), _ + _) / topYPrimeIndices.size >= 0.5) 1 else 0
-
+    topYPrimeIndices.aggregate(0.0)((s, j) => s + ((yprime * Y(j)) / Yprime(j)), _ + _) / topYPrimeIndices.size
 
   }
 

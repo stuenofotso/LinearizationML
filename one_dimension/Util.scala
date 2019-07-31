@@ -1,3 +1,5 @@
+package one_dimension
+
 
 /**
   * Created by steve on 30/07/2019.
@@ -31,7 +33,7 @@ object Util {
 
 
   //the real classification function
-  def fc(x: Double): Double = if (Math.sqrt(x) % 2 > 1) 1 else 0
+  def fc(x: Double): Double = if (fr(x) % 2 > 1) 1 else 0
 
   //the real regression function
   def fr(x: Double): Double = Math.sqrt(x)
