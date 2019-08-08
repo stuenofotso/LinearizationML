@@ -23,7 +23,7 @@ object MultiLinearizationRegression {
 
 
 
-    (0 until N).foreach(i=> data.update(i, scala.util.Random.shuffle(0 to M - 1).map(_.toDouble).toArray))
+    (0 until N).foreach(i=> data.update(i, scala.util.Random.shuffle(0 to M - 1).toArray.map(_.toDouble)))
 
     val dataTmp = data.splitAt(Math.round(N * percentage).toInt)
 
@@ -37,7 +37,7 @@ object MultiLinearizationRegression {
 
 
     //overview of predictions
-    scala.util.Random.shuffle(0 to X.length - 1).take(20).map(i => (i, predict(X(i), Y, Yprime))).foreach(t => println("x = " + X(t._1).mkString(",") + ", yre = " + Y(t._1) + " et ypre = " + t._2))
+    scala.util.Random.shuffle(0 to X.length - 1).toList.take(20).map(i => (i, predict(X(i), Y, Yprime))).foreach(t => println("x = " + X(t._1).mkString(",") + ", yre = " + Y(t._1) + " et ypre = " + t._2))
 
 
     //X.indices.foreach(i=>println(Y(i)+" 1:"+X(i)))

@@ -6,16 +6,24 @@ package multi_dimension
 object Util {
 
   //parameters: must be fine tuned using training data
-  val M=10
-  val as: Vector[Double] = (1 to M).map(_.toDouble).toVector
+  val M=5
+  val as: List[Double] = (1 to M).map(i=>Math.pow(i.toDouble,3)).toList
   val b = M+1.0
-  val k = 10
+  val k = 5
 
 
   /*
   case class Coord(xs: Array[Double]) {
     def dist(c: Coord): Double = Math.sqrt(xs.zip(c.xs).aggregate(0.0)((s, x)=>s+Math.pow(x._1-x._2, 2), _+_))
   }
+
+  def posPrime(n : Int)  =
+for{
+  i<- 2 until n
+    j<-1 until i
+    if isPrime(i+j)
+} yield (i, j)
+
 
   class CoordOrdering(x: Coord) extends Ordering[Coord] {
     def compare(a: Coord, b: Coord): Int = a.dist(x) compare b.dist(x)
