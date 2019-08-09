@@ -15,8 +15,14 @@ object MultiLinearizationClassification {
   /** Main function */
   def main(args: Array[String]): Unit = {
     //processLinearizationClassification("/Users/steve/Downloads/data.txt", 0.65)
-    processLinearizationClassification("/Users/steve/Downloads/sample_multiclass_classification_data.txt", 0.6)
-    //Classification error = 0.35294117647058826 well classified count = 33/51
+    /*Classification error = 0.10265183917878529 well classified count = 3147/3507 for data.txt */
+    //processLinearizationClassification("/Users/steve/Downloads/sample_multiclass_classification_data.txt", 0.6)
+    /* Classification error = 0.35294117647058826 well classified count = 33/51 for sample_multiclass_classification_data.txt*/
+    //processLinearizationClassification("/Users/steve/Downloads/sample_binary_classification_data.txt", 0.6)
+    /*Classification error = 0.027777777777777776 well classified count = 35/36 for sample_binary_classification_data.txt M=692 */
+    processLinearizationClassification("/Users/steve/Downloads/a1a.txt", 0.6)
+    /*Classification error = 0.027777777777777776 well classified count = 35/36 for a1a.txt M=119 */
+
 
   }
 

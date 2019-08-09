@@ -44,18 +44,21 @@ object TimeUsage {
     // Load the data stored in LIBSVM format as a DataFrame.
     val data = spark.read.format("libsvm")
       //.load("/Users/steve/Downloads/data.txt")
-      .load("/Users/steve/Downloads/sample_multiclass_classification_data.txt")
+      //.load("/Users/steve/Downloads/sample_multiclass_classification_data.txt")
+      //.load("/Users/steve/Downloads/sample_binary_classification_data.txt")
+      .load("/Users/steve/Downloads/a1a.txt")
 
     // Split the data into train and test
     val splits = data.randomSplit(Array(0.6, 0.4), seed = 1234L)
     val train = splits(0)
     val test = splits(1)
 
+    println("data overview "+train.head().mkString(", "))
 
     // specify layers for the neural network:
     // input layer of size _ (features), two intermediate of size 5 and 4
     // and output of size _ (classes)
-    val layers = Array[Int](4, 5, 4, 3)
+    val layers = Array[Int](119, 5, 4, 2)
 
     // create the trainer and set its parameters
     val trainer = new MultilayerPerceptronClassifier()
@@ -74,7 +77,10 @@ object TimeUsage {
       .setMetricName("accuracy")
 
     println(s"Test set accuracy = ${evaluator.evaluate(predictionAndLabels)}")
-    //Test set accuracy = 0.9019607843137255
+    /*Test set accuracy = 0.6992518703241896 for data.txt*/
+    /*Test set accuracy = 0.9019607843137255 for sample_multiclass_classification_data.txt*/
+    /* Test set accuracy = 0.8888888888888888 for sample_binary_classification_data.txt*/
+    /*Test set accuracy = 0.7972508591065293 for a1a.txt*/
 
 
   }
