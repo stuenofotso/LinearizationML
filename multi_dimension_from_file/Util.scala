@@ -8,10 +8,10 @@ import org.apache.spark.sql.{Dataset, Row}
 object Util {
 
   //parameters: must be fine tuned using training data
-  val M=119
-  val as: List[Double] = (1 to M).map(i=>Math.pow(i.toDouble,3)+i).toList
-  val b = M+1.0
-  val k = 10
+  val M=10
+  val as: List[Double] = (1 to M).map(i=>i.toDouble*2).toList
+  val b = M*10+3.0
+  val k = 5
 
 
 

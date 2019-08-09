@@ -21,8 +21,11 @@ object MultiLinearizationClassification {
     /* Classification error = 0.35294117647058826 well classified count = 33/51 for sample_multiclass_classification_data.txt*/
     //processLinearizationClassification("/Users/steve/Downloads/sample_binary_classification_data.txt", 0.6)
     /*Classification error = 0.027777777777777776 well classified count = 35/36 for sample_binary_classification_data.txt M=692 */
-    processLinearizationClassification("/Users/steve/Downloads/a1a.txt", 0.6)
+    //processLinearizationClassification("/Users/steve/Downloads/a1a.txt", 0.6)
     /* Classification error = 0.2697594501718213 well classified count = 425/582 for a1a.txt M=119 K=10 */
+    processLinearizationClassification("/Users/steve/Downloads/breast-cancer_scale.txt", 0.6)
+    /* Classification error = 0.028225806451612902 well classified count = 241/248 for breast-cancer_scale.txt M=10 K=5 */
+
 
 
   }

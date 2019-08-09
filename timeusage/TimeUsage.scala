@@ -4,15 +4,14 @@ import java.lang.reflect.Parameter
 import java.nio.file.Paths
 import java.time.LocalDate
 
+import org.apache.spark.ml.Pipeline
 import org.apache.spark.sql._
 import org.apache.spark.sql.types._
-
 import org.apache.spark.mllib.clustering.KMeans
 import org.apache.spark.mllib.linalg.Vectors
-
-
-import org.apache.spark.ml.classification.MultilayerPerceptronClassifier
+import org.apache.spark.ml.classification.{LogisticRegression, MultilayerPerceptronClassifier, RandomForestClassifier}
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.feature.{IndexToString, StringIndexer, VectorIndexer}
 
 
 
@@ -33,6 +32,8 @@ object TimeUsage {
       .config("spark.master", "local")
       .getOrCreate()
 
+  spark.sparkContext.setLogLevel("ERROR")
+
   // For implicit conversions like converting RDDs to DataFrames
   import spark.implicits._
 
@@ -40,13 +41,33 @@ object TimeUsage {
   def main(args: Array[String]): Unit = {
     //timeUsageByLifePeriod()
 
+    val filePath = "/Users/steve/Downloads/breast-cancer_scale.txt"
 
+    println("multiLinearPerceptronClassifier")
+    /*Test set accuracy = 0.6992518703241896 for data.txt*/
+    /*Test set accuracy = 0.9019607843137255 for sample_multiclass_classification_data.txt*/
+    /* Test set accuracy = 0.8888888888888888 for sample_binary_classification_data.txt*/
+    /*Test set accuracy = 0.7972508591065293 for a1a.txt*/
+    multiLinearPerceptronClassifier(filePath)
+
+    println("logisticRegressionClassifier")
+    logisticRegressionClassifier(filePath)
+
+
+    println("randomForestClassifier")
+    /* Test Error = 0.03053435114503822 for breast-cancer_scale.txt */
+    randomForestClassifier(filePath)
+
+
+  }
+
+  def multiLinearPerceptronClassifier(filepath:String): Unit ={
     // Load the data stored in LIBSVM format as a DataFrame.
     val data = spark.read.format("libsvm")
       //.load("/Users/steve/Downloads/data.txt")
       //.load("/Users/steve/Downloads/sample_multiclass_classification_data.txt")
       //.load("/Users/steve/Downloads/sample_binary_classification_data.txt")
-      .load("/Users/steve/Downloads/a1a.txt")
+      .load(filepath)
 
     // Split the data into train and test
     val splits = data.randomSplit(Array(0.6, 0.4), seed = 1234L)
@@ -58,7 +79,7 @@ object TimeUsage {
     // specify layers for the neural network:
     // input layer of size _ (features), two intermediate of size 5 and 4
     // and output of size _ (classes)
-    val layers = Array[Int](119, 5, 4, 2)
+    val layers = Array[Int](10, 5, 4, 2)
 
     // create the trainer and set its parameters
     val trainer = new MultilayerPerceptronClassifier()
@@ -77,10 +98,107 @@ object TimeUsage {
       .setMetricName("accuracy")
 
     println(s"Test set accuracy = ${evaluator.evaluate(predictionAndLabels)}")
-    /*Test set accuracy = 0.6992518703241896 for data.txt*/
-    /*Test set accuracy = 0.9019607843137255 for sample_multiclass_classification_data.txt*/
-    /* Test set accuracy = 0.8888888888888888 for sample_binary_classification_data.txt*/
-    /*Test set accuracy = 0.7972508591065293 for a1a.txt*/
+
+
+  }
+
+
+
+  def randomForestClassifier(filepath:String): Unit ={
+    // Load the data stored in LIBSVM format as a DataFrame.
+    val data = spark.read.format("libsvm")
+      //.load("/Users/steve/Downloads/data.txt")
+      //.load("/Users/steve/Downloads/sample_multiclass_classification_data.txt")
+      //.load("/Users/steve/Downloads/sample_binary_classification_data.txt")
+      .load(filepath)
+
+    // Index labels, adding metadata to the label column.
+    // Fit on whole dataset to include all labels in index.
+    val labelIndexer = new StringIndexer()
+      .setInputCol("label")
+      .setOutputCol("indexedLabel")
+      .fit(data)
+    // Automatically identify categorical features, and index them.
+    // Set maxCategories so features with > 4 distinct values are treated as continuous.
+    val featureIndexer = new VectorIndexer()
+      .setInputCol("features")
+      .setOutputCol("indexedFeatures")
+      .setMaxCategories(4)
+      .fit(data)
+
+    // Split the data into training and test sets (40% held out for testing).
+    val Array(trainingData, testData) = data.randomSplit(Array(0.6, 0.4))
+
+    // Train a RandomForest model.
+    val rf = new RandomForestClassifier()
+      .setLabelCol("indexedLabel")
+      .setFeaturesCol("indexedFeatures")
+      .setNumTrees(10)
+
+    // Convert indexed labels back to original labels.
+    val labelConverter = new IndexToString()
+      .setInputCol("prediction")
+      .setOutputCol("predictedLabel")
+      .setLabels(labelIndexer.labels)
+
+    // Chain indexers and forest in a Pipeline.
+    val pipeline = new Pipeline()
+      .setStages(Array(labelIndexer, featureIndexer, rf, labelConverter))
+
+    // Train model. This also runs the indexers.
+    val model = pipeline.fit(trainingData)
+
+    // Make predictions.
+    val predictions = model.transform(testData)
+
+    // Select example rows to display.
+    predictions.select("predictedLabel", "label", "features").show(5)
+
+    // Select (prediction, true label) and compute test error.
+    val evaluator = new MulticlassClassificationEvaluator()
+      .setLabelCol("indexedLabel")
+      .setPredictionCol("prediction")
+      .setMetricName("accuracy")
+    val accuracy = evaluator.evaluate(predictions)
+    println(s"Test Error = ${(1.0 - accuracy)}")
+
+    // Test Error = 0.03053435114503822 for
+
+  }
+
+
+
+
+  def logisticRegressionClassifier(filePath:String): Unit ={
+    // Load the data stored in LIBSVM format as a DataFrame.
+    val data = spark.read.format("libsvm")
+      //.load("/Users/steve/Downloads/data.txt")
+      //.load("/Users/steve/Downloads/sample_multiclass_classification_data.txt")
+      //.load("/Users/steve/Downloads/sample_binary_classification_data.txt")
+      .load(filePath)
+
+
+    println("data overview "+data.head().mkString(", "))
+
+    val lr = new LogisticRegression()
+      .setMaxIter(100)
+      .setRegParam(0.3)
+      .setElasticNetParam(0.8)
+
+    // Fit the model
+    val lrModel = lr.fit(data)
+
+    val trainingSummary = lrModel.summary
+
+    val accuracy = trainingSummary.accuracy
+    val falsePositiveRate = trainingSummary.weightedFalsePositiveRate
+    val truePositiveRate = trainingSummary.weightedTruePositiveRate
+    val fMeasure = trainingSummary.weightedFMeasure
+    val precision = trainingSummary.weightedPrecision
+    val recall = trainingSummary.weightedRecall
+    println(s"Accuracy: $accuracy\nFPR: $falsePositiveRate\nTPR: $truePositiveRate\n" +
+      s"F-measure: $fMeasure\nPrecision: $precision\nRecall: $recall")
+
 
 
   }
