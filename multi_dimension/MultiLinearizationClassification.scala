@@ -1,5 +1,7 @@
 package multi_dimension
 
+import org.apache.spark.sql.SparkSession
+
 /*
 @ author: Steve Tueno
 @ email: stuenofotso@gmail.com
@@ -12,7 +14,7 @@ object MultiLinearizationClassification {
 
   /** Main function */
   def main(args: Array[String]): Unit = {
-    processLinearizationClassification(1000, Util.M, 0.6)
+    processLinearizationClassification(10000, Util.M, 0.6)
   }
 
 
@@ -29,12 +31,10 @@ object MultiLinearizationClassification {
     val X = dataTmp._1.toArray
     val Y = X.map(Util.fc)
     val Yprime = X.map(Util.prime)
-    val YProba0 = Y.map(y => if (y == 0.0) (scala.util.Random.nextDouble() * 2) / 5 else ((scala.util.Random.nextDouble() * 2) + 3) / 5)
 
 
     val XTest = dataTmp._2.toArray
     val YTest = XTest.map(Util.fc)
-    val YprimeTest = XTest.map(Util.prime)
 
     //val x = scala.util.Random.nextInt(2 * N + 1)
     //println("x = "+x+", yre = "+f(x)+" et ypre = "+predict(x, Y, Yprime, a, b, k))
@@ -44,17 +44,20 @@ object MultiLinearizationClassification {
     scala.util.Random.shuffle(0 to X.size - 1).toList.take(20).map(i => (i, predict(X(i), Y, Yprime))).foreach(t => println("x = " + X(t._1).mkString(",")  + ", yre = " + Y(t._1) + " et ypre = " + t._2))
 
 
-    //X.indices.foreach(i=>println(Y(i)+" 1:"+X(i)))
-    //XTest.indices.foreach(i=>println(YTest(i)+" 1:"+XTest(i)))
+    //X.indices.foreach(i=>println(Y(i)+ " "+ X(i).indices.map(j => (j + 1) + ":" + X(i)(j)).mkString(" ")))
+    //XTest.indices.foreach(i=>println(YTest(i)+ " "+ XTest(i).indices.map(j => (j + 1) + ":" + XTest(i)(j)).mkString(" ")))
 
 
-    //println("erreur de régression = "+XTest.indices.aggregate(0.0)((s, i)=>s+Math.pow(predict(XTest(i), YTest, YprimeTest, a, b, k)-YTest(i), 2), _+_))
+
 
     val predicts = XTest.indices.aggregate(0.0)((s, i) => if (predict(XTest(i), Y, Yprime) == YTest(i)) s + 1 else s, _ + _)
 
     println("Classification error = " + (XTest.length - predicts) / XTest.length + " well classified count = " + predicts + "/" + XTest.length)
 
   }
+
+
+
 
   def predict(x: Array[Double], Y: Array[Double], Yprime: Array[Double]): Double = {
 
