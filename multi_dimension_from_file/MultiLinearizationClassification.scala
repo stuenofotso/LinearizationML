@@ -1,5 +1,6 @@
 package multi_dimension_from_file
 
+import multi_dimension_from_file.Util.YPrime
 import org.apache.spark.sql.types.DoubleType
 import org.apache.spark.sql.{Dataset, Row, SparkSession}
 
@@ -34,19 +35,13 @@ object MultiLinearizationClassification {
 
 
 
-  val spark: SparkSession =
-    SparkSession
-      .builder()
-      .appName("Time Usage")
-      .config("spark.master", "local")
-      .getOrCreate()
-  spark.sparkContext.setLogLevel("ERROR")
+
   import org.apache.spark.sql.functions._
-  import spark.implicits._
+  import Util.spark.implicits._
   def processLinearizationClassification(filePath:String, percentage: Double) = {
 
     // Load the data stored in LIBSVM format as a DataFrame.
-    val data = spark.read.format("libsvm")
+    val data = Util.spark.read.format("libsvm")
       .load(filePath)
 
     //data.take(50).foreach(head=>System.out.println("a row of data : "+head.mkString(", ")+" & "+head.getAs[org.apache.spark.ml.linalg.SparseVector](1).indices.mkString(", ")+" "+head.getAs[org.apache.spark.ml.linalg.SparseVector](1).values.mkString(", ")))
@@ -121,6 +116,3 @@ object MultiLinearizationClassification {
 
 }
 
-case class YPrime(count:Int, yre:Double, yprime:Double){
-  def getYPrime(yp:Double): Double = if(count==1) ((yp * yre) / yprime) else yprime
-}

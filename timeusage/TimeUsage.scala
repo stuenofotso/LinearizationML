@@ -41,7 +41,7 @@ object TimeUsage {
   def main(args: Array[String]): Unit = {
     //timeUsageByLifePeriod()
 
-    val filePath = "/Users/steve/Downloads/breast-cancer_scale.txt"
+    val filePath = "/Users/steve/Downloads/sample_linear_regression_data.txt"
 
     println("multiLinearPerceptronClassifier")
     /*Test set accuracy = 0.6992518703241896 for data.txt*/

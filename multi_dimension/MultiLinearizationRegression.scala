@@ -12,7 +12,7 @@ object MultiLinearizationRegression {
 
   /** Main function */
   def main(args: Array[String]): Unit = {
-    processLinearizationRegression(1000, Util.M, 0.6)
+    processLinearizationRegression(10000, Util.M, 0.6)
   }
 
 
@@ -40,11 +40,9 @@ object MultiLinearizationRegression {
     scala.util.Random.shuffle(0 to X.length - 1).toList.take(20).map(i => (i, predict(X(i), Y, Yprime))).foreach(t => println("x = " + X(t._1).mkString(",") + ", yre = " + Y(t._1) + " et ypre = " + t._2))
 
 
-    //X.indices.foreach(i=>println(Y(i)+" 1:"+X(i)))
-    //XTest.indices.foreach(i=>println(YTest(i)+" 1:"+XTest(i)))
+    //X.indices.foreach(i=>println(Y(i)+ " "+ X(i).indices.map(j => (j + 1) + ":" + X(i)(j)).mkString(" ")))
+    //XTest.indices.foreach(i=>println(YTest(i)+ " "+ XTest(i).indices.map(j => (j + 1) + ":" + XTest(i)(j)).mkString(" ")))
 
-    //X.indices.foreach(i=>println(X(i)+" "+Y(i)))
-    //XTest.indices.foreach(i=>println(XTest(i)+" "+YTest(i)))
 
 
 

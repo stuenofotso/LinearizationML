@@ -1,19 +1,35 @@
 package multi_dimension_from_file
 
-import org.apache.spark.sql.{Dataset, Row}
+import org.apache.spark.sql.{Dataset, Row, SparkSession}
 
 /**
   * Created by steve on 30/07/2019.
   */
 object Util {
 
+
+
   //parameters: must be fine tuned using training data
   val M=10
-  val as: List[Double] = (1 to M).map(i=>i.toDouble*2).toList
-  val b = M*10+3.0
+  //val as: List[Double] = (1 to M).map(i=>i.toDouble*2).toList
+  //val b = M*10+3.0
+  val as: List[Double] = (1 to M).map(i=>Math.pow(i.toDouble,3)).toList
+  val b = M+1.0
   val k = 5
 
 
+  val spark: SparkSession =
+    SparkSession
+      .builder()
+      .appName("Time Usage")
+      .config("spark.master", "local")
+      .getOrCreate()
+  spark.sparkContext.setLogLevel("ERROR")
+
+
+  case class YPrime(count:Int, yre:Double, yprime:Double){
+    def getYPrime(yp:Double): Double = if(count==1) ((yp * yre) / yprime) else yprime
+  }
 
 
 //  case class Coord(x: Row) {
