@@ -49,7 +49,7 @@ object MultiLinearizationClassificationExp2 {
   * Y: labels
   *  YProba0:
    */
-  def probabilityQuest(x:Row, Yprime: List[YPrimeExp],  allowedToViolate: Dataset[String]): YPrimeExp = {
+  def probabilityQuest(x:Row, Yprime: List[YPrimeExp],  allowedToViolate: Array[String]): YPrimeExp = {
 
     //val Yprime = Yprime1.toDF("count", "yre", "yprime", "yProba", "xStr", "changed")
 
@@ -73,7 +73,7 @@ object MultiLinearizationClassificationExp2 {
         return YPrimeExp(1, yprime.yre, yprime.yprime, yProba0-pas, yprime.xStr, changed = true)
       }
       else {
-        if (allowedToViolate.filter($"_1".equalTo(lit(yprime.xStr))).count()>0) {
+        if (allowedToViolate.par.exists(_ == yprime.xStr)) {
           return YPrimeExp(1, yprime.yre, yprime.yprime, yProba0, yprime.xStr, changed = true)
         }
         else {
@@ -93,7 +93,7 @@ object MultiLinearizationClassificationExp2 {
 
     //val oldProba = YProba.clone()
 
-    val allowedToViolate = X.randomSplit(Array(NumberConsensusPrior, 1-NumberConsensusPrior))(0).map(_.mkString(","))
+    val allowedToViolate = X.randomSplit(Array(NumberConsensusPrior, 1-NumberConsensusPrior))(0).map(_.mkString(",")).collect()
 
     //val res = Util.spark.sparkContext.parallelize(X.collect().par.map(x=>probabilityQuest(x, Yprime, allowedToViolate)).toList).toDS()
 
