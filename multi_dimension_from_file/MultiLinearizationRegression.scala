@@ -18,7 +18,7 @@ object MultiLinearizationRegression {
   def main(args: Array[String]): Unit = {
     //processLinearizationRegression("/Users/steve/Downloads/data_regression.txt", 0.6)
     /* XTest.length = 4010 & Regression error = 0.03009260609571779 data_regression.txt */
-    processLinearizationRegression("/Users/steve/Downloads/sample_linear_regression_data.txt", 0.7)
+    processLinearizationRegression("/Users/steve/Downloads/cadata.txt", 0.7)
   }
 
 
