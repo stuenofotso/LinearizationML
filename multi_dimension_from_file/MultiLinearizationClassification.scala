@@ -24,8 +24,11 @@ object MultiLinearizationClassification {
     /*Classification error = 0.027777777777777776 well classified count = 35/36 for sample_binary_classification_data.txt M=692 */
     //processLinearizationClassification("/Users/steve/Downloads/a1a.txt", 0.6)
     /* Classification error = 0.2697594501718213 well classified count = 425/582 for a1a.txt M=119 K=10 */
-    processLinearizationClassification("/Users/steve/Downloads/breast-cancer_scale.txt", 0.6)
+    //processLinearizationClassification("/Users/steve/Downloads/breast-cancer_scale.txt", 0.6)
     /* Classification error = 0.028225806451612902 well classified count = 241/248 for breast-cancer_scale.txt M=10 K=5 */
+    //processLinearizationClassification("/Users/steve/Downloads/a2a.txt", 0.6)
+    /* Classification error = 0.26085889570552145 well classified count = 9036/12225 for a2a.txt M=123 K=5 */
+    processLinearizationClassification("/Users/steve/Downloads/cod-rna.txt", 0.65)
 
 
 
@@ -51,6 +54,8 @@ object MultiLinearizationClassification {
 
     val X = splits(0).cache()
     //val X = data.sample(percentage)
+
+    println("data sample: "+X.head().mkString(", "))
 
     //X.take(50).foreach(head=>System.out.println("a row of X : "+head.mkString(", ")+" & "+head.getAs[org.apache.spark.ml.linalg.SparseVector](1).indices.mkString(", ")+" "+head.getAs[org.apache.spark.ml.linalg.SparseVector](1).values.mkString(", ")))
 

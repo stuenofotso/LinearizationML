@@ -39,7 +39,7 @@ object MultiLinearizationClassificationExp2 {
   def main(args: Array[String]): Unit = {
     //processLinearizationClassificationExp("/Users/steve/Downloads/data.txt", 0.65)
 
-    processLinearizationClassificationExp("/Users/steve/Downloads/breast-cancer_scale.txt", 0.6)
+    processLinearizationClassificationExp("/Users/steve/Downloads/cod-rna.txt", 0.6)
   }
 
 

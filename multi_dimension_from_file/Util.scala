@@ -10,10 +10,11 @@ object Util {
 
 
   //parameters: must be fine tuned using training data
-  val M=10
+  val M=8
   //val as: List[Double] = (1 to M).map(i=>i.toDouble*2).toList
-  //val b = M*10+3.0
-  val as: List[Double] = (1 to M).map(i=>Math.pow(i.toDouble,3)).toList
+  //val b = M*2+3.0
+  //val as: List[Double] = (1 to M).map(i=>Math.pow(i.toDouble,2)).toList
+  val as: List[Double] = (1 to M).map(i=>Math.pow(10*i,3)).toList
   val b = M+1.0
   val k = 5
 

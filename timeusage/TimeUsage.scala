@@ -41,7 +41,7 @@ object TimeUsage {
   def main(args: Array[String]): Unit = {
     //timeUsageByLifePeriod()
 
-    val filePath = "/Users/steve/Downloads/breast-cancer_scale.txt"
+    val filePath = "/Users/steve/Downloads/cod-rna.txt"
 
     println("multiLinearPerceptronClassifier")
     /*Test set accuracy = 0.6992518703241896 for data.txt*/
@@ -79,7 +79,7 @@ object TimeUsage {
     // specify layers for the neural network:
     // input layer of size _ (features), two intermediate of size 5 and 4
     // and output of size _ (classes)
-    val layers = Array[Int](10, 5, 4, 2)
+    val layers = Array[Int](8, 3, 4, 2)
 
     // create the trainer and set its parameters
     val trainer = new MultilayerPerceptronClassifier()
