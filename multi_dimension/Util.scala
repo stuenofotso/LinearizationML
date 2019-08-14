@@ -64,7 +64,7 @@ for{
   def fc(xs: Array[Double]): Double = if (fr(xs) % 2 > 1) 1 else 0
 
   //the real regression function
-  def fr(xs: Array[Double]): Double = xs.aggregate(0.0, 0)((s, x)=>(s._1+Math.exp(x*s._2+1), s._2+1), (s1, s2)=>(s1._1+s2._1, s1._2+s2._2))._1
+  def fr(xs: Array[Double]): Double = xs.aggregate(0.0, 0)((s, x)=>(s._1+Math.tan(x*s._2+1), s._2+1), (s1, s2)=>(s1._1+s2._1, s1._2+s2._2))._1
 
 
   def prime(xs: Array[Double]): Double = xs.indices.aggregate(0.0)((s, i)=>s+xs(i)*as(i), _+_) + b

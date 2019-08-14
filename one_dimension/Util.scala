@@ -10,6 +10,7 @@ object Util {
   val a = 2.0
   val b = 3.0
   val k = 3
+  val d=5
 
 
   case class Coord(x: Double) {
@@ -39,6 +40,6 @@ object Util {
   def fr(x: Double): Double = Math.sqrt(x)
 
 
-  def prime(x: Double): Double = a * x + b
+  def prime(x: Double): Double = a * (x+d) + b
 
 }

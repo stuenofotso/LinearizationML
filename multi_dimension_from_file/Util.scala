@@ -16,7 +16,7 @@ object Util {
   //val as: List[Double] = (1 to M).map(i=>Math.pow(i.toDouble,2)).toList
   val as: List[Double] = (1 to M).map(i=>Math.pow(10*i,3)).toList
   val b = M+1.0
-  val k = 5
+  val k = 6
 
 
   val spark: SparkSession =

@@ -20,7 +20,7 @@ object MultiLinearizationRegressionMedian {
   def main(args: Array[String]): Unit = {
     //processLinearizationRegression("/Users/steve/Downloads/data_regression.txt", 0.6)
     /* XTest.length = 4010 & Regression error = 0.03009260609571779 data_regression.txt */
-    processLinearizationRegression("/Users/steve/Downloads/data_tan.txt", 0.7)
+    processLinearizationRegression("/Users/steve/Downloads/data_tan_reg.txt", 0.7)
   }
 
 
@@ -71,16 +71,16 @@ object MultiLinearizationRegressionMedian {
     val topYPrimeIndices = Yprime.orderBy(udf((x:Double)=>Math.abs(yprime-x), DoubleType)($"yprime").asc).limit(Util.k)
 
 
-    //val res = topYPrimeIndices.reduce((r1, r2)=>YPrime(r1.count+r2.count, 0.0, r1.getYPrime(yprime) + r2.getYPrime(yprime)))
+    val res = topYPrimeIndices.reduce((r1, r2)=>YPrime(r1.count+r2.count, 0.0, r1.getYPrime(yprime) + r2.getYPrime(yprime)))
     //estimer comme valeur médianne et pas comme moyenne
 
-    //res.yprime/ res.count
+    res.yprime/ res.count
 
 
-    val arrMean = new DescriptiveStatistics()
-    genericArrayOps(topYPrimeIndices.map(_.getYPrime(yprime)).collect()).foreach(v => arrMean.addValue(v))
+    //val arrMean = new DescriptiveStatistics()
+    //genericArrayOps(topYPrimeIndices.map(_.getYPrime(yprime)).collect()).foreach(v => arrMean.addValue(v))
 
-    arrMean.getPercentile(50)
+    //arrMean.getPercentile(50)
 
 
   }

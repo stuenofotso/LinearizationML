@@ -13,7 +13,7 @@ object LinearizationRegression {
 
   /** Main function */
   def main(args: Array[String]): Unit = {
-    processLinearizationRegression(10000, 0.6)
+    processLinearizationRegression(1000, 0.6)
   }
 
 
